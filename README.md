@@ -12,6 +12,10 @@ A beautiful, gamified SaaS application for tracking your weekly calorie budget. 
 ### Core Functionality
 - 📊 **Weekly Calorie Banking** - Set a weekly budget and track your daily consumption
 - 💰 **Bank Balance System** - See how many calories you've saved or overspent
+- 🍽️ **Meal-by-Meal Tracking** - Log individual meals throughout the day with real-time progress
+- ⚡ **Quick Add Presets** - Save common meals for one-tap logging
+- 🔮 **Weekly Forecast** - See projected outcomes based on your current pace
+- 📅 **Monthly Calendar View** - Visual history of your tracking with color-coded performance
 - 📈 **Visual Weekly Overview** - Beautiful bar chart showing daily progress
 - 📝 **Easy Daily Logging** - Quick form to log calories for any day
 - ⚙️ **Customizable Settings** - Set your weekly target and preferred start day
@@ -84,9 +88,10 @@ In your Supabase project dashboard:
    - `supabase/migrations/002_seed_achievements.sql` - Seeds achievement data
    - `supabase/migrations/003_auto_create_user_records.sql` - Auto-creates user records on signup
    - `supabase/migrations/004_auto_update_stats_and_achievements.sql` - Auto-updates stats and awards achievements
+   - `supabase/migrations/005_add_meals_and_presets.sql` - Adds meal-by-meal tracking and presets
 4. Run each query one at a time
 
-This will create all the necessary tables, set up row-level security, seed achievements, and configure automatic stat tracking.
+This will create all the necessary tables, set up row-level security, seed achievements, and configure automatic stat tracking and meal logging.
 
 ### 6. Start the Development Server
 

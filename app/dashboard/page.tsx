@@ -7,6 +7,10 @@ import type { CalorieEntry, UserSettings, UserStats, Achievement, UserAchievemen
 import Navbar from '@/components/Navbar'
 import WeeklySummaryCard from '@/components/WeeklySummaryCard'
 import WeeklyBarChart from '@/components/WeeklyBarChart'
+import TodaysMeals from '@/components/TodaysMeals'
+import WeeklyForecast from '@/components/WeeklyForecast'
+import MealPresetsManager from '@/components/MealPresetsManager'
+import CalendarView from '@/components/CalendarView'
 import CalorieEntryForm from '@/components/CalorieEntryForm'
 import RecentEntriesTable from '@/components/RecentEntriesTable'
 import StatsCard from '@/components/StatsCard'
@@ -20,6 +24,8 @@ export default function DashboardPage() {
   const [achievements, setAchievements] = useState<Achievement[]>([])
   const [userAchievements, setUserAchievements] = useState<UserAchievement[]>([])
   const [loading, setLoading] = useState(true)
+  const [showCalendar, setShowCalendar] = useState(false)
+  const [showPresets, setShowPresets] = useState(false)
 
   const supabase = createClient()
 
@@ -123,6 +129,7 @@ export default function DashboardPage() {
   const weeklySummary = calculateWeeklySummary(entries, settings)
   const dailyData = getDailyDataForWeek(entries, settings)
   const currentStreak = calculateStreak(entries)
+  const dailyTarget = settings.weekly_calorie_target / 7
 
   return (
     <>
@@ -148,18 +155,75 @@ export default function DashboardPage() {
             <StatsCard stats={stats} currentStreak={currentStreak} />
           </div>
 
-          {/* Weekly Bar Chart */}
+          {/* Today's Meals - NEW */}
           <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            <TodaysMeals
+              userId={userId}
+              dailyTarget={dailyTarget}
+              onMealsUpdated={fetchData}
+            />
+          </div>
+
+          {/* Weekly Forecast - NEW */}
+          <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
+            <WeeklyForecast summary={weeklySummary} />
+          </div>
+
+          {/* Weekly Bar Chart */}
+          <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
             <WeeklyBarChart dailyData={dailyData} />
           </div>
 
-          {/* Calorie Entry Form */}
-          <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
-            <CalorieEntryForm userId={userId} onEntryAdded={fetchData} />
+          {/* View Toggles */}
+          <div className="flex space-x-4 animate-slide-up" style={{ animationDelay: '0.5s' }}>
+            <button
+              onClick={() => setShowCalendar(!showCalendar)}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                showCalendar
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              📅 {showCalendar ? 'Hide' : 'View'} Calendar
+            </button>
+            <button
+              onClick={() => setShowPresets(!showPresets)}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                showPresets
+                  ? 'bg-secondary-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              ⚡ {showPresets ? 'Hide' : 'Manage'} Presets
+            </button>
           </div>
 
+          {/* Calendar View - NEW */}
+          {showCalendar && (
+            <div className="animate-slide-up">
+              <CalendarView entries={entries} settings={settings} />
+            </div>
+          )}
+
+          {/* Meal Presets Manager - NEW */}
+          {showPresets && (
+            <div className="animate-slide-up">
+              <MealPresetsManager userId={userId} />
+            </div>
+          )}
+
+          {/* Fallback: Simple Calorie Entry (for manual daily totals) */}
+          <details className="animate-slide-up" style={{ animationDelay: '0.6s' }}>
+            <summary className="cursor-pointer p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-semibold text-gray-700">
+              📝 Quick Daily Total (No Meal Breakdown)
+            </summary>
+            <div className="mt-4">
+              <CalorieEntryForm userId={userId} onEntryAdded={fetchData} />
+            </div>
+          </details>
+
           {/* Achievements */}
-          <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
+          <div className="animate-slide-up" style={{ animationDelay: '0.7s' }}>
             <AchievementsCard
               achievements={achievements}
               userAchievements={userAchievements}
@@ -167,7 +231,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Entries */}
-          <div className="animate-slide-up" style={{ animationDelay: '0.5s' }}>
+          <div className="animate-slide-up" style={{ animationDelay: '0.8s' }}>
             <RecentEntriesTable entries={entries} />
           </div>
         </div>
