@@ -167,13 +167,25 @@ export default function DashboardPage() {
             <StatsCard stats={stats} currentStreak={currentStreak} />
           </div>
 
-          {/* Today's Meals */}
+          {/* Today's Meals & Quick Daily Total - Side by Side */}
           <div id="meals" className="scroll-mt-24 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            <TodaysMeals
-              userId={userId}
-              dailyTarget={dailyTarget}
-              onMealsUpdated={fetchData}
-            />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Meal-by-Meal Tracking */}
+              <TodaysMeals
+                userId={userId}
+                dailyTarget={dailyTarget}
+                onMealsUpdated={fetchData}
+              />
+
+              {/* Quick Daily Total */}
+              <div className="card">
+                <div className="mb-4">
+                  <h3 className="text-xl font-bold text-gray-800">Quick Daily Total</h3>
+                  <p className="text-sm text-gray-600">Log total calories without meal breakdown</p>
+                </div>
+                <CalorieEntryForm userId={userId} onEntryAdded={fetchData} />
+              </div>
+            </div>
           </div>
 
           {/* Weekly Forecast */}
@@ -223,16 +235,6 @@ export default function DashboardPage() {
               <MealPresetsManager userId={userId} />
             </div>
           )}
-
-          {/* Fallback: Simple Calorie Entry (for manual daily totals) */}
-          <details className="animate-slide-up" style={{ animationDelay: '0.6s' }}>
-            <summary className="cursor-pointer p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-semibold text-gray-700">
-              📝 Quick Daily Total (No Meal Breakdown)
-            </summary>
-            <div className="mt-4">
-              <CalorieEntryForm userId={userId} onEntryAdded={fetchData} />
-            </div>
-          </details>
 
           {/* Achievements */}
           <div id="achievements" className="scroll-mt-24 animate-slide-up" style={{ animationDelay: '0.7s' }}>
