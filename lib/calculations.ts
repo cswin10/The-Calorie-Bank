@@ -28,9 +28,11 @@ export function calculateWeeklySummary(
   const averagePerDay = daysLogged > 0 ? Math.round(totalConsumed / daysLogged) : 0
   const remainingPerDay = remainingDays > 0 ? Math.round(remaining / remainingDays) : 0
 
-  // Calculate bank balance
+  // Calculate bank balance (only count completed days, not today)
   const dailyTarget = weeklyTarget / 7
-  const expectedSoFar = dailyTarget * daysElapsed
+  // Subtract 1 from daysElapsed to exclude today from the calculation
+  const completedDays = Math.max(0, daysElapsed - 1)
+  const expectedSoFar = dailyTarget * completedDays
   const banked = expectedSoFar - totalConsumed
   const isOverBudget = banked < 0
 
@@ -140,4 +142,20 @@ export function getProgressBarColor(percentage: number): string {
   if (percentage > 90) return 'bg-orange-500'
   if (percentage > 75) return 'bg-yellow-500'
   return 'bg-gradient-to-r from-primary-500 to-primary-600'
+}
+
+export function getDailyBarColor(calories: number, target: number): string {
+  if (calories === 0) return 'bg-gray-300'
+
+  const percentage = (calories / target) * 100
+  const deviation = Math.abs(percentage - 100)
+
+  // Green: within 10% of target
+  if (deviation <= 10) return 'bg-green-500'
+  // Yellow: within 20% of target
+  if (deviation <= 20) return 'bg-yellow-500'
+  // Orange: within 30% of target
+  if (deviation <= 30) return 'bg-orange-500'
+  // Red: 40%+ away from target
+  return 'bg-red-500'
 }

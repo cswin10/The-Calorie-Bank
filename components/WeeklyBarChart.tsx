@@ -1,5 +1,5 @@
 import { getDayName, isToday, isPastDate } from '@/lib/dateUtils'
-import { formatCalories } from '@/lib/calculations'
+import { formatCalories, getDailyBarColor } from '@/lib/calculations'
 import type { DailyData } from '@/lib/types'
 
 interface WeeklyBarChartProps {
@@ -14,20 +14,16 @@ export default function WeeklyBarChart({ dailyData }: WeeklyBarChartProps) {
       <div className="grid grid-cols-7 gap-2">
         {dailyData.map((day, index) => {
           const percentage = Math.min((day.calories / day.target) * 100, 150)
+          const deviation = Math.abs(percentage - 100)
           const isCurrentDay = isToday(day.date)
           const isPast = isPastDate(day.date)
 
+          // Use the new color function based on deviation from target
           let barColor = 'bg-gray-300'
           if (day.isLogged) {
-            if (percentage > 100) {
-              barColor = 'bg-gradient-to-t from-red-500 to-red-400'
-            } else if (percentage > 90) {
-              barColor = 'bg-gradient-to-t from-orange-500 to-orange-400'
-            } else if (percentage > 75) {
-              barColor = 'bg-gradient-to-t from-yellow-500 to-yellow-400'
-            } else {
-              barColor = 'bg-gradient-to-t from-primary-500 to-primary-400'
-            }
+            const baseColor = getDailyBarColor(day.calories, day.target)
+            // Add gradient
+            barColor = baseColor.replace('bg-', 'bg-gradient-to-t from-').replace('-500', '-500 to-').replace('-500', '-400')
           } else if (!isPast && !isCurrentDay) {
             barColor = 'bg-gray-200'
           }
@@ -79,12 +75,14 @@ export default function WeeklyBarChart({ dailyData }: WeeklyBarChartProps) {
               {/* Status Emoji */}
               <div className="text-lg mt-1">
                 {day.isLogged ? (
-                  percentage > 100 ? (
-                    '😓'
-                  ) : percentage > 90 ? (
+                  deviation <= 10 ? (
+                    '✅'
+                  ) : deviation <= 20 ? (
+                    '😊'
+                  ) : deviation <= 30 ? (
                     '😅'
                   ) : (
-                    '✅'
+                    '😓'
                   )
                 ) : isPast ? (
                   '⭕'
@@ -101,20 +99,20 @@ export default function WeeklyBarChart({ dailyData }: WeeklyBarChartProps) {
       <div className="mt-6 pt-4 border-t border-gray-200">
         <div className="flex flex-wrap gap-4 text-sm">
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded bg-gradient-to-t from-primary-500 to-primary-400" />
-            <span className="text-gray-600">On Target</span>
+            <div className="w-4 h-4 rounded bg-gradient-to-t from-green-500 to-green-400" />
+            <span className="text-gray-600">±10% (Perfect ✅)</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 rounded bg-gradient-to-t from-yellow-500 to-yellow-400" />
-            <span className="text-gray-600">75-90%</span>
+            <span className="text-gray-600">±20% (Good 😊)</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 rounded bg-gradient-to-t from-orange-500 to-orange-400" />
-            <span className="text-gray-600">90-100%</span>
+            <span className="text-gray-600">±30% (Fair 😅)</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 rounded bg-gradient-to-t from-red-500 to-red-400" />
-            <span className="text-gray-600">Over Target</span>
+            <span className="text-gray-600">±40%+ (Off 😓)</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 rounded bg-gray-300" />
