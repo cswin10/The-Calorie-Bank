@@ -32,7 +32,7 @@ export default function WeeklySummaryCard({ summary }: WeeklySummaryCardProps) {
           <h2 className="text-2xl font-bold text-gray-800">
             {formatWeekRange(weekStart, weekEnd)}
           </h2>
-          <span className="badge badge-success">Week {daysElapsed}/7</span>
+          <span className="badge badge-success">Day {daysElapsed} of 7</span>
         </div>
 
         {/* Progress Bar */}
