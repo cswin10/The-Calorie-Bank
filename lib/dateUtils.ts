@@ -27,7 +27,7 @@ export function getDaysElapsed(weekStart: Date, today: Date = new Date()): numbe
 }
 
 export function getRemainingDays(today: Date, weekEnd: Date): number {
-  const remaining = differenceInDays(weekEnd, today)
+  const remaining = differenceInDays(weekEnd, today) + 1 // +1 to include today
   return Math.max(1, remaining)
 }
 

@@ -79,11 +79,14 @@ In your Supabase project dashboard:
 
 1. Go to **SQL Editor**
 2. Create a new query
-3. Copy and paste the contents of `supabase/migrations/001_initial_schema.sql`
-4. Run the query
-5. Repeat for `supabase/migrations/002_seed_achievements.sql`
+3. Copy and paste the contents of each migration file **in order**:
+   - `supabase/migrations/001_initial_schema.sql` - Creates tables and RLS policies
+   - `supabase/migrations/002_seed_achievements.sql` - Seeds achievement data
+   - `supabase/migrations/003_auto_create_user_records.sql` - Auto-creates user records on signup
+   - `supabase/migrations/004_auto_update_stats_and_achievements.sql` - Auto-updates stats and awards achievements
+4. Run each query one at a time
 
-This will create all the necessary tables, set up row-level security, and seed the achievements.
+This will create all the necessary tables, set up row-level security, seed achievements, and configure automatic stat tracking.
 
 ### 6. Start the Development Server
 
