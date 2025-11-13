@@ -90,6 +90,9 @@ export default function CalorieEntryForm({ userId, onEntryAdded }: CalorieEntryF
               className="input-field"
               required
             />
+            <p className="text-xs text-gray-500 mt-1">
+              💡 Click to select any past date
+            </p>
           </div>
 
           <div>
