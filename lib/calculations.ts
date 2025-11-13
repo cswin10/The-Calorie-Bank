@@ -19,19 +19,28 @@ export function calculateWeeklySummary(
   const weeklyTarget = settings.weekly_calorie_target
   const remaining = weeklyTarget - totalConsumed
 
+  // Check if today has been logged
+  const todayString = formatDate(today)
+  const todayIsLogged = weekEntries.some(entry => entry.entry_date === todayString)
+
   // Calculate days
   const daysElapsed = getDaysElapsed(weekStart, today)
   const daysLogged = weekEntries.length
-  const remainingDays = getRemainingDays(today, weekEnd)
+  let remainingDays = getRemainingDays(today, weekEnd)
+
+  // If today is logged, exclude it from remaining days (it's done!)
+  if (todayIsLogged) {
+    remainingDays = Math.max(1, remainingDays - 1)
+  }
 
   // Calculate averages
   const averagePerDay = daysLogged > 0 ? Math.round(totalConsumed / daysLogged) : 0
   const remainingPerDay = remainingDays > 0 ? Math.round(remaining / remainingDays) : 0
 
-  // Calculate bank balance (only count completed days, not today)
+  // Calculate bank balance
   const dailyTarget = weeklyTarget / 7
-  // Subtract 1 from daysElapsed to exclude today from the calculation
-  const completedDays = Math.max(0, daysElapsed - 1)
+  // If today is logged, count it as a completed day. Otherwise exclude it.
+  const completedDays = todayIsLogged ? daysElapsed : Math.max(0, daysElapsed - 1)
   const expectedSoFar = dailyTarget * completedDays
   const banked = expectedSoFar - totalConsumed
   const isOverBudget = banked < 0
