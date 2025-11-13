@@ -1,4 +1,5 @@
 export type WeekStartDay = 'monday' | 'sunday'
+export type TimeOfDay = 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'other'
 
 export interface UserSettings {
   id: string
@@ -14,6 +15,30 @@ export interface CalorieEntry {
   user_id: string
   entry_date: string
   calories: number
+  created_at: string
+  updated_at: string
+}
+
+export interface Meal {
+  id: string
+  user_id: string
+  entry_date: string
+  meal_name: string
+  calories: number
+  time_of_day: TimeOfDay | null
+  logged_at: string
+  created_at: string
+  updated_at: string
+}
+
+export interface MealPreset {
+  id: string
+  user_id: string
+  name: string
+  calories: number
+  time_of_day: TimeOfDay | null
+  is_favorite: boolean
+  use_count: number
   created_at: string
   updated_at: string
 }
