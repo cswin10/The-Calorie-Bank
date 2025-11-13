@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { calculateWeeklySummary, getDailyDataForWeek, calculateStreak } from '@/lib/calculations'
 import type { CalorieEntry, UserSettings, UserStats, Achievement, UserAchievement } from '@/lib/types'
 import Navbar from '@/components/Navbar'
+import DashboardNav from '@/components/DashboardNav'
 import WeeklySummaryCard from '@/components/WeeklySummaryCard'
 import WeeklyBarChart from '@/components/WeeklyBarChart'
 import TodaysMeals from '@/components/TodaysMeals'
@@ -99,6 +100,15 @@ export default function DashboardPage() {
     fetchData()
   }, [])
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      const yOffset = -80 // Offset for navbar
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
+  }
+
   if (loading) {
     return (
       <>
@@ -134,7 +144,9 @@ export default function DashboardPage() {
   return (
     <>
       <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <DashboardNav onNavigate={scrollToSection} />
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
         <div className="mb-8 animate-fade-in">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
             Welcome to Your Calorie Bank! 🏦
@@ -146,17 +158,17 @@ export default function DashboardPage() {
 
         <div className="space-y-8">
           {/* Weekly Summary */}
-          <div className="animate-slide-up">
+          <div id="summary" className="scroll-mt-24 animate-slide-up">
             <WeeklySummaryCard summary={weeklySummary} />
           </div>
 
           {/* Stats Card */}
-          <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <div id="stats" className="scroll-mt-24 animate-slide-up" style={{ animationDelay: '0.1s' }}>
             <StatsCard stats={stats} currentStreak={currentStreak} />
           </div>
 
-          {/* Today's Meals - NEW */}
-          <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          {/* Today's Meals */}
+          <div id="meals" className="scroll-mt-24 animate-slide-up" style={{ animationDelay: '0.2s' }}>
             <TodaysMeals
               userId={userId}
               dailyTarget={dailyTarget}
@@ -164,18 +176,18 @@ export default function DashboardPage() {
             />
           </div>
 
-          {/* Weekly Forecast - NEW */}
-          <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
+          {/* Weekly Forecast */}
+          <div id="forecast" className="scroll-mt-24 animate-slide-up" style={{ animationDelay: '0.3s' }}>
             <WeeklyForecast summary={weeklySummary} />
           </div>
 
           {/* Weekly Bar Chart */}
-          <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
+          <div id="chart" className="scroll-mt-24 animate-slide-up" style={{ animationDelay: '0.4s' }}>
             <WeeklyBarChart dailyData={dailyData} />
           </div>
 
           {/* View Toggles */}
-          <div className="flex space-x-4 animate-slide-up" style={{ animationDelay: '0.5s' }}>
+          <div className="flex flex-wrap gap-4 animate-slide-up" style={{ animationDelay: '0.5s' }}>
             <button
               onClick={() => setShowCalendar(!showCalendar)}
               className={`px-6 py-3 rounded-lg font-semibold transition-all ${
@@ -198,16 +210,16 @@ export default function DashboardPage() {
             </button>
           </div>
 
-          {/* Calendar View - NEW */}
+          {/* Calendar View */}
           {showCalendar && (
-            <div className="animate-slide-up">
+            <div id="calendar" className="scroll-mt-24 animate-slide-up">
               <CalendarView entries={entries} settings={settings} />
             </div>
           )}
 
-          {/* Meal Presets Manager - NEW */}
+          {/* Meal Presets Manager */}
           {showPresets && (
-            <div className="animate-slide-up">
+            <div id="presets" className="scroll-mt-24 animate-slide-up">
               <MealPresetsManager userId={userId} />
             </div>
           )}
@@ -223,7 +235,7 @@ export default function DashboardPage() {
           </details>
 
           {/* Achievements */}
-          <div className="animate-slide-up" style={{ animationDelay: '0.7s' }}>
+          <div id="achievements" className="scroll-mt-24 animate-slide-up" style={{ animationDelay: '0.7s' }}>
             <AchievementsCard
               achievements={achievements}
               userAchievements={userAchievements}
@@ -231,7 +243,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Entries */}
-          <div className="animate-slide-up" style={{ animationDelay: '0.8s' }}>
+          <div id="history" className="scroll-mt-24 animate-slide-up" style={{ animationDelay: '0.8s' }}>
             <RecentEntriesTable entries={entries} />
           </div>
         </div>

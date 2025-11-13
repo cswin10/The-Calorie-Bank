@@ -64,9 +64,10 @@ export default function WeeklyBarChart({ dailyData }: WeeklyBarChartProps) {
                 {/* Today Indicator */}
                 {isCurrentDay && (
                   <div className="absolute top-1 left-1/2 transform -translate-x-1/2">
-                    <span className="text-xs bg-primary-600 text-white px-2 py-0.5 rounded-full font-bold">
+                    <span className="hidden sm:inline-block text-xs bg-primary-600 text-white px-2 py-0.5 rounded-full font-bold">
                       Today
                     </span>
+                    <span className="sm:hidden bg-primary-600 text-white w-2 h-2 rounded-full inline-block"></span>
                   </div>
                 )}
               </div>
