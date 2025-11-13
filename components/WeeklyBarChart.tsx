@@ -22,8 +22,18 @@ export default function WeeklyBarChart({ dailyData }: WeeklyBarChartProps) {
           let barColor = 'bg-gray-300'
           if (day.isLogged) {
             const baseColor = getDailyBarColor(day.calories, day.target)
-            // Add gradient
-            barColor = baseColor.replace('bg-', 'bg-gradient-to-t from-').replace('-500', '-500 to-').replace('-500', '-400')
+            // Convert solid colors to vibrant gradients
+            if (baseColor.includes('green')) {
+              barColor = 'bg-gradient-to-t from-green-600 to-green-400'
+            } else if (baseColor.includes('yellow')) {
+              barColor = 'bg-gradient-to-t from-yellow-600 to-yellow-400'
+            } else if (baseColor.includes('orange')) {
+              barColor = 'bg-gradient-to-t from-orange-600 to-orange-400'
+            } else if (baseColor.includes('red')) {
+              barColor = 'bg-gradient-to-t from-red-600 to-red-400'
+            } else {
+              barColor = baseColor
+            }
           } else if (!isPast && !isCurrentDay) {
             barColor = 'bg-gray-200'
           }
@@ -99,19 +109,19 @@ export default function WeeklyBarChart({ dailyData }: WeeklyBarChartProps) {
       <div className="mt-6 pt-4 border-t border-gray-200">
         <div className="flex flex-wrap gap-4 text-sm">
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded bg-gradient-to-t from-green-500 to-green-400" />
+            <div className="w-4 h-4 rounded bg-gradient-to-t from-green-600 to-green-400" />
             <span className="text-gray-600">±10% (Perfect ✅)</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded bg-gradient-to-t from-yellow-500 to-yellow-400" />
+            <div className="w-4 h-4 rounded bg-gradient-to-t from-yellow-600 to-yellow-400" />
             <span className="text-gray-600">±20% (Good 😊)</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded bg-gradient-to-t from-orange-500 to-orange-400" />
+            <div className="w-4 h-4 rounded bg-gradient-to-t from-orange-600 to-orange-400" />
             <span className="text-gray-600">±30% (Fair 😅)</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded bg-gradient-to-t from-red-500 to-red-400" />
+            <div className="w-4 h-4 rounded bg-gradient-to-t from-red-600 to-red-400" />
             <span className="text-gray-600">±40%+ (Off 😓)</span>
           </div>
           <div className="flex items-center space-x-2">
