@@ -77,11 +77,15 @@ export default function SettingsPage() {
       if (error) throw error
 
       setSuccess(true)
+      // Scroll to top to show success message
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       setTimeout(() => {
         router.push('/dashboard')
-      }, 1500)
+      }, 2000)
     } catch (err: any) {
       setError(err.message || 'Failed to save settings')
+      // Scroll to top to show error message
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } finally {
       setSaving(false)
     }
@@ -106,6 +110,33 @@ export default function SettingsPage() {
   return (
     <>
       <Navbar />
+
+      {/* Fixed Success Toast */}
+      {success && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 animate-slide-down">
+          <div className="bg-green-500 text-white px-8 py-4 rounded-lg shadow-2xl flex items-center space-x-3 border-2 border-green-600">
+            <div className="text-3xl animate-bounce">✅</div>
+            <div>
+              <div className="font-bold text-lg">Settings Saved!</div>
+              <div className="text-sm text-green-100">Your calorie budget has been updated</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fixed Error Toast */}
+      {error && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 animate-slide-down max-w-md">
+          <div className="bg-red-500 text-white px-8 py-4 rounded-lg shadow-2xl flex items-center space-x-3 border-2 border-red-600">
+            <div className="text-3xl">❌</div>
+            <div>
+              <div className="font-bold text-lg">Error</div>
+              <div className="text-sm text-red-100">{error}</div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8 animate-fade-in">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">Settings ⚙️</h1>
